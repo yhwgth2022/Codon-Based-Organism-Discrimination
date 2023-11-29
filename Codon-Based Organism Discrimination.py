@@ -103,37 +103,6 @@ Y_test = encoder.fit_transform(Y_test.to_numpy().reshape(-1,1)).toarray()
 #Defining the number of input features (or Input Dimensions)
 p = X_train.shape[1] #p = 78
 
-'''
-#Testing (REMOVE """ FOR RESULTS) Testing (REMOVE """ FOR RESULTS) Testing#
-
-mlp_star = tf.keras.Sequential()
-mlp_star.add(tf.keras.layers.Dense(units = p/2, activation= "relu", input_dim = p))
-mlp_star.add(tf.keras.layers.Dense(units = 11, activation= "softmax"))
-
-mlp_star.compile(loss = "categorical_crossentropy", optimizer = "adam", metrics = "categorical_accuracy")
-history_star = mlp_star.fit(X_train, Y_train, epochs=2000,batch_size= 1042,
-    validation_data = (X_test, Y_test), verbose=1)
-
-
-#Plot 1
-pd.DataFrame(history_star.history)[["loss","val_loss"]].plot()
-plt.xlabel("epoch")
-plt.legend(bbox_to_anchor=(1.05, 1), loc=2)
-plt.show()
-
-#Plot 2
-pd.DataFrame(history_star.history)[["categorical_accuracy","val_categorical_accuracy"]].plot()
-plt.xlabel("epoch")
-plt.legend(bbox_to_anchor=(1.05, 1), loc=2)
-plt.show()
-
-#Accuracy Increase per 500 epochs
-history_star.history['val_categorical_accuracy'][::200]
-#Good number of epochs seems to be 1400
-
-
-#Testing (REMOVE """ FOR RESULTS) Testing (REMOVE """ FOR RESULTS) Testing#
-'''
 #%%
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
