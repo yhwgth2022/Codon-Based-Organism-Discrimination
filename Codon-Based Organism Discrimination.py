@@ -227,39 +227,7 @@ pev
 pev = pev.reshape(13,6)
 #4 Principal Components
 
-#%%
-'''
-#Testing (REMOVE """ FOR RESULTS) Testing (REMOVE """ FOR RESULTS) Testing#
 
-mlp_low = tf.keras.Sequential()
-mlp_low.add(tf.keras.layers.Dense(units = 4, activation= "relu", input_dim = p))
-mlp_low.add(tf.keras.layers.Dense(units = 11, activation= "softmax"))
-
-mlp_low.compile(loss = "categorical_crossentropy", optimizer = "adam", metrics = "categorical_accuracy")
-
-history_low = mlp_low.fit(X_train, Y_train, epochs=2000,batch_size= 1042,
-    validation_data = (X_test, Y_test), verbose=1)
-
-#Plot 1
-pd.DataFrame(history_low.history)[["loss","val_loss"]].plot()
-plt.xlabel("epoch")
-plt.legend(bbox_to_anchor=(1.05, 1), loc=2)
-plt.show()
-
-#Plot 2
-pd.DataFrame(history_low.history)[["categorical_accuracy","val_categorical_accuracy"]].plot()
-plt.xlabel("epoch")
-plt.legend(bbox_to_anchor=(1.05, 1), loc=2)
-plt.show()
-
-#Accuracy Increase per 500 epochs
-history_low.history['val_categorical_accuracy'][::200]
-#5000 is again a safe choice
-
-#Testing (REMOVE """ FOR RESULTS) Testing (REMOVE """ FOR RESULTS) Testing#
-'''
-
-#%%
 
 #Trained Model Against the Test Set
 mlp_low = tf.keras.Sequential()
@@ -494,38 +462,6 @@ sum(pev_cl1[:28])
 h_high = 28 + 7 + 14 + 10 + 5 + 2 + 1 + 1 + 1 + 1 + 28
 h_high
 
-
-#%%
-'''
-#Testing (REMOVE """ FOR RESULTS) Testing (REMOVE """ FOR RESULTS) Testing#
-
-mlp_high = tf.keras.Sequential()
-mlp_high.add(tf.keras.layers.Dense(units = 98, activation= "relu", input_dim = p))
-mlp_high.add(tf.keras.layers.Dense(units = 11, activation= "softmax"))
-
-mlp_high.compile(loss = "categorical_crossentropy", optimizer = "adam", metrics = "categorical_accuracy")
-
-history_high = mlp_high.fit(X_train, Y_train, epochs=2000,batch_size= 1042,
-    validation_data = (X_test, Y_test), verbose=1)
-
-#Plot 1
-pd.DataFrame(history_high.history)[["loss","val_loss"]].plot()
-plt.xlabel("epoch")
-plt.legend(bbox_to_anchor=(1.05, 1), loc=2)
-plt.show()
-
-#Plot 2
-pd.DataFrame(history_high.history)[["categorical_accuracy","val_categorical_accuracy"]].plot()
-plt.xlabel("epoch")
-plt.legend(bbox_to_anchor=(1.05, 1), loc=2)
-plt.show()
-
-#Accuracy Increase per 500 epochs
-history_high.history['val_categorical_accuracy'][::200]
-#1600 is a good choice this time
-#Testing (REMOVE """ FOR RESULTS) Testing (REMOVE """ FOR RESULTS) Testing#
-'''
-#%%
 #Trained Model Against the Test Set
 mlp_high = tf.keras.Sequential()
 mlp_high.add(tf.keras.layers.Dense(units = 98, activation= "relu", input_dim = p, name = "H1"))
@@ -571,7 +507,6 @@ def plot_confusion_matrix2(Y_test, pred_high_one_hot, classes,
             title = "Normalized confusion matrix"
         else:
             title = "Confusion matrix, without normalization"
-
     # Compute confusion matrix
     cm = confusion_matrix(Y_test, pred_high_one_hot)
     # Only use the labels that appear in the data
@@ -583,7 +518,6 @@ def plot_confusion_matrix2(Y_test, pred_high_one_hot, classes,
         print("Confusion matrix, without normalization")
 
     print(cm)
-
     fig, ax = plt.subplots()
     im = ax.imshow(cm, interpolation="nearest", cmap=cmap)
     ax.figure.colorbar(im, ax=ax)
@@ -595,7 +529,6 @@ def plot_confusion_matrix2(Y_test, pred_high_one_hot, classes,
            title=title,
            ylabel="True label",
            xlabel="Predicted label")
-
     # Rotate the tick labels and set their alignment.
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
              rotation_mode="anchor")
@@ -612,8 +545,6 @@ def plot_confusion_matrix2(Y_test, pred_high_one_hot, classes,
     plt.xlim(-0.5, len(np.unique(Y))-0.5)
     plt.ylim(len(np.unique(Y))-0.5, -0.5)
     return ax
-
-
 np.set_printoptions(precision=2)
 class_names = data["Kingdom"].unique()
 
@@ -636,9 +567,6 @@ Zn = mlp_high.layers[0](X)
 
 #Explain in the report what is the principle of sparsity learning.
 #the features of the data should be kept with droping useless neurons
-
-
-
 sparsity_regularizer = tf.keras.regularizers.l1(0.1)
 aec = tf.keras.Sequential([
     tf.keras.layers.Dense(98, activation='relu', activity_regularizer=sparsity_regularizer ,name='HK'),
@@ -651,8 +579,6 @@ pd.DataFrame(AEC.history)["categorical_accuracy"].plot()
 plt.xlabel("epoch")
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2)
 plt.show()
-
-
 sparsity_regularizer = tf.keras.regularizers.l1(0.1)
 aec_train = tf.keras.Sequential([
     tf.keras.layers.Dense(98, activation='relu', activity_regularizer=sparsity_regularizer ,name='HK'),
@@ -676,16 +602,8 @@ plt.plot( pd.DataFrame(AEC_test.history)[["categorical_accuracy"]], color='orang
 plt.xlabel("epoch")
 plt.legend()
 plt.show()
-
-
-
 #mAEC  = 30
-
-
-
 from numpy import linalg as LA
-
-
 M = LA.norm(Zn)
 
 RAEC = pd.DataFrame(AEC_test.history)["loss"][40]/M
@@ -701,16 +619,11 @@ RAEC#1.9590243245740492e-05
 H1 = mlp_high.get_layer("H1")
 HK = aec_test.get_layer("HK")
 KH= aec_test.get_layer("KH")
-
 MLP12 = tf.keras.Sequential()
 MLP12.add(H1)
 MLP12.add(HK)
 MLP12.add(tf.keras.layers.Dense(units = 11, activation= "softmax", name = "Out"))
-
-
 MLP12.compile(loss = "categorical_crossentropy", optimizer = "adam", metrics = "categorical_accuracy", run_eagerly= True)
-
-
 #Testing
 history_MLP12 = MLP12.fit(X_train, Y_train, epochs=500, batch_size = 1042, validation_data = (X_test, Y_test), verbose=1)
 
@@ -718,13 +631,9 @@ pd.DataFrame(history_MLP12.history)[["categorical_accuracy", "val_categorical_ac
 plt.xlabel("epoch")
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2)
 plt.show()
-
 #Accuracy Increase per 500 epochs
 history_MLP12.history['val_categorical_accuracy'][::50]
 #3000 Epochs seems enough for the test set
-
-
-#%%
 #Creating MLP3
 ##############################################################################
 Un = MLP12.layers[0](X)
@@ -741,8 +650,6 @@ MLP3 = tf.keras.Sequential()
 MLP3.add(MLP12.layers[0])
 MLP3.add(tf.keras.layers.Dense(units = 52, activation= "relu", name = "G"))
 MLP3.add(tf.keras.layers.Dense(11, activation='softmax', name='Out'))
-
-
 Y_n = encoder.fit_transform(Y.to_numpy().reshape(-1,1)).toarray()
 MLP3.compile(loss = "categorical_crossentropy", optimizer = "adam", metrics = "categorical_accuracy")
 history_MLP3 = MLP3.fit(X_train, Y_train, epochs=500,batch_size= 1042)
@@ -752,8 +659,6 @@ plt.xlabel("epoch")
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2)
 plt.show()
 #50 epochs looks fine
-
-
 #Confusion Matrix
 pred_MLP3 = MLP3.predict(X_test)
 pred_MLP3
@@ -798,9 +703,7 @@ def plot_confusion_matrix(Y_test, pred_MLP3_one_hot, classes,
         print("Normalized confusion matrix")
     else:
         print("Confusion matrix, without normalization")
-
     print(cm)
-
     fig, ax = plt.subplots()
     im = ax.imshow(cm, interpolation="nearest", cmap=cmap)
     ax.figure.colorbar(im, ax=ax)
@@ -812,7 +715,6 @@ def plot_confusion_matrix(Y_test, pred_MLP3_one_hot, classes,
            title=title,
            ylabel="True label",
            xlabel="Predicted label")
-
     # Rotate the tick labels and set their alignment.
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
              rotation_mode="anchor")
@@ -829,16 +731,12 @@ def plot_confusion_matrix(Y_test, pred_MLP3_one_hot, classes,
     plt.xlim(-0.5, len(np.unique(Y))-0.5)
     plt.ylim(len(np.unique(Y))-0.5, -0.5)
     return ax
-
-
 np.set_printoptions(precision=2)
 class_names = data["Kingdom"].unique()
 
 #Normalized Confusion Matrix
 plot_confusion_matrix(Y_test.argmax(axis = 1), pred_MLP3_one_hot.argmax(axis = 1), classes=class_names, normalize=True,
                       title="Normalized Confusion Matrix (MLP3*)")
-
-
 #%%
 
 G = MLP3.get_layer("G")
@@ -853,9 +751,6 @@ MLP_long.add(OUT)
 MLP_long.compile(loss = "categorical_crossentropy", optimizer = "adam", metrics = "categorical_accuracy")
 history_MLP_long = MLP3.fit(X_train, Y_train, epochs=500,batch_size= 1042,
                             validation_data = (X_test, Y_test), verbose=1)
-
-
-
 #Confusion Matrix
 pred_MLP_long = MLP_long.predict(X_test)
 pred_MLP_long
@@ -886,7 +781,6 @@ def plot_confusion_matrix2(Y_test, pred_MLP_long_one_hot, classes,
             title = "Normalized confusion matrix"
         else:
             title = "Confusion matrix, without normalization"
-
     # Compute confusion matrix
     cm = confusion_matrix(Y_test, pred_MLP_long_one_hot)
     # Only use the labels that appear in the data
@@ -898,7 +792,6 @@ def plot_confusion_matrix2(Y_test, pred_MLP_long_one_hot, classes,
         print("Confusion matrix, without normalization")
 
     print(cm)
-
     fig, ax = plt.subplots()
     im = ax.imshow(cm, interpolation="nearest", cmap=cmap)
     ax.figure.colorbar(im, ax=ax)
@@ -914,7 +807,6 @@ def plot_confusion_matrix2(Y_test, pred_MLP_long_one_hot, classes,
     # Rotate the tick labels and set their alignment.
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
              rotation_mode="anchor")
-
     # Loop over data dimensions and create text annotations.
     fmt = ".2f" if normalize else "d"
     thresh = cm.max() / 2.
@@ -927,13 +819,10 @@ def plot_confusion_matrix2(Y_test, pred_MLP_long_one_hot, classes,
     plt.xlim(-0.5, len(np.unique(Y))-0.5)
     plt.ylim(len(np.unique(Y))-0.5, -0.5)
     return ax
-
-
 np.set_printoptions(precision=2)
 class_names = data["Kingdom"].unique()
 
 #Normalized Confusion Matrix
 plot_confusion_matrix2(Y_test.argmax(axis = 1), pred_MLP_long_one_hot.argmax(axis = 1), classes=class_names, normalize=True,
                       title="Normalized Confusion Matrix (MLP_long)")
-
 #MLP_MLP_long is the best performer
